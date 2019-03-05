@@ -11,6 +11,28 @@
 |
 */
 
+use Illuminate\Http\Request;
+
 $router->get('/', function () use ($router) {
     return view('index');
 });
+
+$router->post('/domains', ['as' => 'domainsAdd', function (Request $request) use ($router) {
+    $name = $request->input('url');
+    $date = date('Y-m-d H:i:s');
+    $id = DB::table('domains')->insertGetId([
+        'name' => $name,
+        'updated_at' => $date,
+        'created_at' => $date
+    ]);
+    return redirect()->route('domainsShow', ['id' => $id]);
+}]);
+
+$router->get('/domains[/{id}]', ['as' => 'domainsShow',  function ($id = null) {
+    if ($id !== null) {
+        $domains = DB::table('domains')->where('id', $id)->get();
+    } else {
+        $domains = DB::table('domains')->get();
+    }
+    return view('domain', ['domains' => $domains]);
+}]);

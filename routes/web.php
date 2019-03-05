@@ -13,9 +13,9 @@
 
 use Illuminate\Http\Request;
 
-$router->get('/', function () use ($router) {
+$router->get('/', ['as' => 'home', function () use ($router) {
     return view('index');
-});
+}]);
 
 $router->post('/domains', ['as' => 'domainsAdd', function (Request $request) use ($router) {
     $name = $request->input('url');

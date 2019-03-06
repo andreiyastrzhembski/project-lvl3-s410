@@ -30,7 +30,7 @@ $router->post('/domains', ['as' => 'domainsAdd', function (Request $request) {
 
 $router->get('/domains', ['as' => 'domainsAll',  function () {
     $domains = DB::table('domains')->paginate(10);
-    return view('domain', ['domains' => $domains]);
+    return view('domain', ['domains' => $domains, 'pagination' => true]);
 }]);
 
 $router->get('/domains/{id}', ['as' => 'domainsShow',  function ($id) {

@@ -22,7 +22,7 @@
     @endforeach
   </tbody>
 </table>
-@if (count($domains) > 1)
+@if (isset($pagination))
 <div class="container">
   <div class="row align-items-center">
     {{ $domains->links() }}

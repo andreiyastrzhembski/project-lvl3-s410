@@ -37,4 +37,3 @@ $router->get('/domains/{id}', ['as' => 'domainsShow',  function ($id) {
     $domains = DB::table('domains')->where('id', $id)->get();
     return view('domain', ['domains' => $domains]);
 }]);
-

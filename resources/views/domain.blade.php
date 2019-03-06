@@ -15,11 +15,18 @@
     @foreach ($domains as $domain)
     <tr>
       <th scope="row">{{ $domain->id }}</th>
-      <td>{{ $domain->name }}</td>
+      <td><a href="/domains/{{ $domain->id }}">{{ $domain->name }}</a></td>
       <td>{{ $domain->updated_at }}</td>
       <td>{{ $domain->created_at }}</td>
     </tr>
     @endforeach
   </tbody>
 </table>
+@if (count($domains) > 1)
+<div class="container">
+  <div class="row align-items-center">
+    {{ $domains->links() }}
+  </div>
+</div>
+@endif
 @endsection

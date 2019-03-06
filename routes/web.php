@@ -13,11 +13,11 @@
 
 use Illuminate\Http\Request;
 
-$router->get('/', ['as' => 'home', function () use ($router) {
+$router->get('/', ['as' => 'home', function () {
     return view('index');
 }]);
 
-$router->post('/domains', ['as' => 'domainsAdd', function (Request $request) use ($router) {
+$router->post('/domains', ['as' => 'domainsAdd', function (Request $request) {
     $name = $request->input('url');
     $date = date('Y-m-d H:i:s');
     $id = DB::table('domains')->insertGetId([
@@ -28,11 +28,13 @@ $router->post('/domains', ['as' => 'domainsAdd', function (Request $request) use
     return redirect()->route('domainsShow', ['id' => $id]);
 }]);
 
-$router->get('/domains[/{id}]', ['as' => 'domainsShow',  function ($id = null) {
-    if ($id !== null) {
-        $domains = DB::table('domains')->where('id', $id)->get();
-    } else {
-        $domains = DB::table('domains')->get();
-    }
+$router->get('/domains', ['as' => 'domainsAll',  function () {
+    $domains = DB::table('domains')->get();
     return view('domain', ['domains' => $domains]);
 }]);
+
+$router->get('/domains/{id}', ['as' => 'domainsShow',  function ($id) {
+    $domains = DB::table('domains')->where('id', $id)->get();
+    return view('domain', ['domains' => $domains]);
+}]);
+

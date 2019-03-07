@@ -12,6 +12,7 @@
 */
 
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
 
 $router->get('/', ['as' => 'home', function () {
     return view('index');
@@ -21,7 +22,8 @@ $router->post('/domains', ['as' => 'domainsAdd', function (Request $request) {
     $name = $request->input('url');
     $date = date('Y-m-d H:i:s');
 
-    $client = new \GuzzleHttp\Client();
+    $container = app();
+    $client = $container->make('GuzzleHttp\Client');
     $response = $client->get($name);
     $statusCode = $response->getStatusCode();
     $body = $response->getBody()->getContents();

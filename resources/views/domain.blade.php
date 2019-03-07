@@ -9,6 +9,8 @@
       <th scope="col">Name</th>
       <th scope="col">Updated at</th>
       <th scope="col">Created at</th>
+      <th scope="col">Status code</th>
+      <th scope="col">Content length</th>
     </tr>
   </thead>
   <tbody>
@@ -18,6 +20,8 @@
       <td><a href="{{ route('domainsShow', ['id' => $domain->id]) }}">{{ $domain->name }}</a></td>
       <td>{{ $domain->updated_at }}</td>
       <td>{{ $domain->created_at }}</td>
+      <td>{{ $domain->status_code }}</td>
+      <td>{{ $domain->content_length }}</td>
     </tr>
     @endforeach
   </tbody>

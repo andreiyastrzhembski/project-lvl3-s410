@@ -20,10 +20,24 @@ $router->get('/', ['as' => 'home', function () {
 $router->post('/domains', ['as' => 'domainsAdd', function (Request $request) {
     $name = $request->input('url');
     $date = date('Y-m-d H:i:s');
+
+    $client = new \GuzzleHttp\Client();
+    $response = $client->get($name);
+    $statusCode = $response->getStatusCode();
+    $body = $response->getBody()->getContents();
+    if ($response->hasHeader('content-length')) {
+        $contentLength = $response->getHeader('content-length')[0];
+    } else {
+        $contentLength = mb_strlen($body);
+    }
+
     $id = DB::table('domains')->insertGetId([
         'name' => $name,
         'updated_at' => $date,
-        'created_at' => $date
+        'created_at' => $date,
+        'status_code' => $statusCode,
+        'content_length' => $contentLength,
+        'body' => $body
     ]);
     return redirect()->route('domainsShow', ['id' => $id]);
 }]);

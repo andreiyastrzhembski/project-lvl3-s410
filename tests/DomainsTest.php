@@ -11,5 +11,13 @@ class DomainsTest extends TestCase
         $url = 'https://www.google.com/';
         $this->post('/domains', ['url' => $url]);
         $this->seeInDatabase('domains', ['name' => $url]);
+
+        $this->get('/domains');
+        $content = $this->response->getContent();
+        $this->assertContains('https://www.google.com/', $content);
+
+        $this->get('/domains/1');
+        $content = $this->response->getContent();
+        $this->assertContains('https://www.google.com/', $content);
     }
 }

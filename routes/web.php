@@ -24,7 +24,11 @@ $router->post('/domains', ['as' => 'domainsAdd', function (Request $request) {
 
     $container = app();
     $client = $container->make('GuzzleHttp\Client');
-    $response = $client->get($name);
+    try {
+        $response = $client->get($name);
+    } catch (\Exception $e) {
+        return view('index', ['error' => $e->getMessage()]);
+    }
     $statusCode = $response->getStatusCode();
     $body = $response->getBody()->getContents();
     if ($response->hasHeader('content-length')) {

@@ -13,4 +13,10 @@
     <button type="submit" class="btn btn-primary btn-lg">Submit</button>
   </form>
 </div>
+
+@if (isset($error))
+  <div class="alert alert-danger" role="alert">
+    {{ $error }}
+  </div>
+@endif
 @endsection

@@ -13,6 +13,7 @@
 
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use DiDom\Document;
 
 $router->get('/', ['as' => 'home', function () {
     return view('index');
@@ -21,7 +22,6 @@ $router->get('/', ['as' => 'home', function () {
 $router->post('/domains', ['as' => 'domainsAdd', function (Request $request) {
     $name = $request->input('url');
     $date = date('Y-m-d H:i:s');
-
     $container = app();
     $client = $container->make('GuzzleHttp\Client');
     try {
@@ -37,13 +37,33 @@ $router->post('/domains', ['as' => 'domainsAdd', function (Request $request) {
         $contentLength = mb_strlen($body);
     }
 
+    $document = new Document($body);
+    if ($document->has('h1')) {
+        $h1 = $document->first('h1')->text();
+    } else {
+        $h1 = null;
+    }
+    if ($document->has('meta[name="keywords"]')) {
+        $keywords = $document->first('meta[name="keywords"]')->getAttribute('content');
+    } else {
+        $keywords = null;
+    }
+    if ($document->has('meta[name="description"]')) {
+        $description = $document->first('meta[name="description"]')->getAttribute('content');
+    } else {
+        $description = null;
+    }
+
     $id = DB::table('domains')->insertGetId([
         'name' => $name,
         'updated_at' => $date,
         'created_at' => $date,
         'status_code' => $statusCode,
         'content_length' => $contentLength,
-        'body' => $body
+        'body' => $body,
+        'h1' => $h1,
+        'keywords' => $keywords,
+        'description' => $description
     ]);
     return redirect()->route('domainsShow', ['id' => $id]);
 }]);
@@ -55,5 +75,5 @@ $router->get('/domains', ['as' => 'domainsAll',  function () {
 
 $router->get('/domains/{id}', ['as' => 'domainsShow',  function ($id) {
     $domains = DB::table('domains')->where('id', $id)->get();
-    return view('domain', ['domains' => $domains]);
+    return view('domain', ['domains' => $domains, 'detailed' => true]);
 }]);
